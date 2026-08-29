@@ -1,14 +1,15 @@
 /**
- * Portfolio Data for Ojas Joshi
+ * Portfolio & Digital Twin Data for Ojas Joshi
  * Computer Science / Engineering Student & Developer
  * 
- * Keep all personal details, skills, projects, and learning journey items here
- * to make updates quick and straightforward.
+ * Living System Architecture & Interconnected Topology Data
  */
 
 export const personalData = {
   name: "Ojas Joshi",
   headline: "Computer Science Student & Developer",
+  systemStatus: "ONLINE • RUNNING v1.0",
+  coreVersion: "2026.8",
   status: "Open to learning & collaborations",
   location: "Mumbai, India",
   college: "SIES Graduate School of Technology",
@@ -22,38 +23,49 @@ export const personalData = {
     email: "mailto:ojasj33@gmail.com",
   },
   heroSummary:
-    "I'm a Computer Engineering student who loves writing clean code, exploring systems, solving mathematical problems, and building intuitive digital experiences.",
+    "I'm a Computer Engineering student living at the intersection of clean software engineering, algorithmic problem solving, physical simulation, and mathematics.",
   aboutText: [
-    "Hey! I'm Ojas, a Computer Engineering student based in Mumbai. My journey into tech started with genuine curiosity about how software, mathematics, and computers actually function beneath the surface.",
-    "Right now, I spend my time mastering C++, Python, and JavaScript, tackling algorithmic challenges, understanding computer architecture, and crafting modern web applications with React. I enjoy breaking down complex mathematical and physical simulations into elegant, well-structured programs.",
-    "Beyond academics and coding, I'm serving as the Web Development Coordinator for the ARENA SIESGST student chapter, where I collaborate on technical initiatives and web projects."
+    "Welcome to my interactive Digital Twin. I'm Ojas, a Computer Engineering undergraduate based in Mumbai with an insatiable appetite for understanding how computation, mathematics, and systems weave together.",
+    "My engineering universe is treated not as isolated skills, but as an interconnected living ecosystem: from low-level systems in C and algorithmic rigor in C++, to computational kinematics in PhysiX and high-performance web engineering with React.",
+    "Beyond the screen, athletic pursuits in football, badminton, and pickleball along with cinema storytelling provide cognitive balance to my technical work."
+  ],
+  systemTelemetry: [
+    { label: "Core Node", value: "Ojas.CS_v1.0" },
+    { label: "Base Institute", value: "SIES GST (Mumbai Univ)" },
+    { label: "Primary Simulation", value: "PhysiX 2D Kinematics" },
+    { label: "Current Focus", value: "DSA in C++ & Full-Stack" },
+    { label: "Leadership Node", value: "ARENA Web Dev Coord" }
   ],
   interests: [
     {
       title: "Problem Solving & DSA",
-      desc: "Practicing algorithms, graph traversals, and data structures in C++ and Python.",
-      icon: "Code2"
+      desc: "Practicing graph algorithms, dynamic programming, and data structures in C++ and Python.",
+      icon: "Code2",
+      nodeId: "algorithms"
     },
     {
-      title: "Web Engineering & Simulation",
-      desc: "Building interactive web apps, Canvas physics simulations, and modern React interfaces.",
-      icon: "Layout"
+      title: "Physics & Kinematics Simulation",
+      desc: "Building interactive classical mechanics simulators like PhysiX with real physics equations.",
+      icon: "Atom",
+      nodeId: "physix"
     },
     {
-      title: "Mathematics & CS Theory",
-      desc: "Exploring discrete math, linear algebra, 2D kinematics, and computational physics.",
-      icon: "Cpu"
+      title: "Web Architecture & React",
+      desc: "Engineering reactive web tools, state systems, and interfaces for the ARENA student chapter.",
+      icon: "Layout",
+      nodeId: "web"
     },
     {
-      title: "Systems Exploration",
-      desc: "Understanding memory layout, pointers, operating systems, and Unix fundamentals.",
-      icon: "Terminal"
+      title: "Systems & Theory",
+      desc: "Exploring memory layout, pointers, operating systems, linear algebra, and discrete math.",
+      icon: "Cpu",
+      nodeId: "systems"
     }
   ],
   hobbies: [
     { name: "Sports", detail: "Football, badminton, swimming & pickleball", icon: "Activity" },
-    { name: "Reading", detail: "CS books, non-fiction & tech essays", icon: "BookOpen" },
-    { name: "Cinema", detail: "Appreciating storytelling, direction & film craft", icon: "Film" }
+    { name: "Reading", detail: "CS literature, non-fiction & engineering essays", icon: "BookOpen" },
+    { name: "Cinema", detail: "Appreciating storytelling, screenplay & cinematic direction", icon: "Film" }
   ]
 };
 
@@ -61,7 +73,7 @@ export const skillsData = {
   categories: [
     {
       name: "Programming Languages",
-      description: "Core languages I use for problem solving, systems, and scripting",
+      description: "Core languages powering algorithms, systems, and scripting",
       skills: [
         { name: "C++", badge: "Primary for DSA & Problem Solving", level: "Active Focus" },
         { name: "C", badge: "Low-level Concepts & Memory", level: "Foundational" },
@@ -70,13 +82,13 @@ export const skillsData = {
       ]
     },
     {
-      name: "Web Development",
-      description: "Frontend libraries and web technologies I build with",
+      name: "Web Development & Graphics",
+      description: "Frontend libraries, rendering canvases, and tooling",
       skills: [
         { name: "React", badge: "Component-driven Web Apps", level: "Active Focus" },
-        { name: "HTML5 & Canvas", badge: "2D Kinematics Rendering & Graphics", level: "Proficient" },
-        { name: "CSS3", badge: "Responsive Layouts & Glassmorphism", level: "Proficient" },
-        { name: "Vite", badge: "Fast Tooling & Bundling", level: "Proficient" }
+        { name: "HTML5 Canvas", badge: "2D Kinematics Simulation Graphics", level: "Proficient" },
+        { name: "CSS3", badge: "Cyber HUDs & Responsive Design", level: "Proficient" },
+        { name: "Vite", badge: "Fast Bundling & Tooling", level: "Proficient" }
       ]
     },
     {
@@ -91,7 +103,7 @@ export const skillsData = {
     },
     {
       name: "Computer Science Fundamentals",
-      description: "Core academic and theoretical pillars",
+      description: "Core academic, algorithmic, and mathematical pillars",
       skills: [
         { name: "Data Structures", badge: "Arrays, Trees, Graphs, Linked Lists", level: "Active Focus" },
         { name: "Algorithms", badge: "Sorting, Searching, Recursion & Greedy", level: "Active Focus" },

@@ -5,6 +5,7 @@ import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Journey from './components/Journey';
+import DigitalTwinTerminal from './components/DigitalTwinTerminal';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import { personalData } from './data/portfolioData';
@@ -30,19 +31,20 @@ export default function App() {
 
   return (
     <div className="app">
-      {/* Background Dot Pattern */}
+      {/* Background Dot Pattern & Ambient Lighting */}
       <div className="bg-grid-overlay"></div>
 
       {/* Navigation Header */}
       <Navbar />
 
-      {/* Main Content Sections */}
+      {/* Main Sections */}
       <main>
         <Hero onCopyEmail={handleCopyEmail} copied={copied} />
         <About />
         <Skills />
         <Projects />
         <Journey />
+        <DigitalTwinTerminal />
         <Contact onCopyEmail={handleCopyEmail} copied={copied} />
       </main>
 

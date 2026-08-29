@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Terminal, ArrowUpRight } from 'lucide-react';
+import { Menu, X, Terminal, ArrowUpRight, Bot } from 'lucide-react';
 import { personalData } from '../data/portfolioData';
 
 export default function Navbar() {
@@ -11,7 +11,7 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      const sections = ['hero', 'about', 'skills', 'projects', 'journey', 'contact'];
+      const sections = ['hero', 'about', 'skills', 'projects', 'journey', 'digital-twin', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -34,8 +34,9 @@ export default function Navbar() {
   const navItems = [
     { label: 'About', href: '#about', id: 'about' },
     { label: 'Skills', href: '#skills', id: 'skills' },
-    { label: 'Projects', href: '#projects', id: 'projects' },
+    { label: 'PhysiX Lab', href: '#projects', id: 'projects' },
     { label: 'Journey', href: '#journey', id: 'journey' },
+    { label: 'AI Twin', href: '#digital-twin', id: 'digital-twin' },
     { label: 'Contact', href: '#contact', id: 'contact' },
   ];
 
