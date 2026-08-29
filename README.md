@@ -5,7 +5,7 @@ student, the things I'm learning, and the projects I'm building.
 
 ## Live Demo
 
-[View Portfolio](https://ojas-portfolio.vercel.app)
+[View Portfolio](https://ojas-portfolio-site.vercel.app)
 
 ## Built With
 
