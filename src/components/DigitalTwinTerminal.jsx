@@ -1,14 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Terminal, Send, Trash2, Bot, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Terminal, Send, Trash2, Bot, Sparkles, CheckCircle2, ShieldCheck, RefreshCw } from 'lucide-react';
 import { personalData, projectsData, skillsData, journeyData } from '../data/portfolioData';
 
 // Helper to filter out any internal model thought reasoning or <think> tags
 function cleanAIResponse(raw) {
   if (!raw) return '';
-  let text = raw;
-  // 1. Remove <think>...</think> and <thought>...</thought> tags
+  let text = typeof raw === 'string' ? raw : String(raw);
+  // 1. Remove closed <think>...</think> and <thought>...</thought> tags
   text = text.replace(/<(?:think|thought)>[\s\S]*?<\/(?:think|thought)>/gi, '');
-  // 2. Remove accidental thinking preambles if a reasoning model leaked thoughts
+  // 2. Remove unclosed thinking tags if truncated
+  text = text.replace(/<(?:think|thought)>[\s\S]*$/gi, '');
+  // 3. Remove accidental thinking preambles if a reasoning model leaked thoughts
   text = text.replace(
     /^\s*(?:Okay|Hmm|Looking at my|Thinking|Thought Process|Quick mental scan|\*Quick mental scan)[\s\S]*?(?=\n\n(?:Hey|Hi|Hello|PhysiX|[#A-Z*]|Ojas|⚛️|💻|🎓|⚽|📬|I am|I'm|Sure|Welcome|Thanks|Great))/i,
     ''
@@ -21,7 +23,7 @@ export default function DigitalTwinTerminal() {
     {
       role: 'assistant',
       content:
-        "⚡ OJAS_DIGITAL_TWIN v1.0 [CS Engine]\nStatus: ONLINE • Connected to OpenRouter AI Engine\nI am Ojas Joshi's AI Digital Twin. Ask me anything about my flagship project PhysiX, my C++ and React stack, coursework at SIES GST, ARENA coordinator work, or sports and cinema!\n\nType any question or click a command below."
+        "⚡ OJAS_DIGITAL_TWIN v1.0 [CS Engine]\nStatus: ONLINE • Connected to OpenRouter Multi-Model AI Engine\nI am Ojas Joshi's AI Digital Twin. As a Computer Engineering student at SIES GST, ask me anything about my flagship project PhysiX, my C++ and React stack, coursework, ARENA coordinator work, or sports and cinema!\n\nType any question or click a command below."
     }
   ]);
   const [input, setInput] = useState('');
@@ -42,49 +44,92 @@ export default function DigitalTwinTerminal() {
   const quickCommands = [
     { label: '/physix', prompt: 'Tell me about your flagship project PhysiX and what physics principles it simulates.' },
     { label: '/skills', prompt: 'What programming languages, frameworks, and CS fundamentals do you specialize in?' },
-    { label: '/journey', prompt: 'What is your background as a student at SIES GST and what are you exploring next?' },
+    { label: '/student', prompt: "I'm a Computer Engineering student too! What is your background at SIES GST and what are you exploring?" },
+    { label: '/arena', prompt: 'What is your role as Web Development Coordinator for ARENA SIESGST?' },
     { label: '/sports', prompt: 'What sports and hobbies do you enjoy outside of programming?' },
-    { label: '/contact', prompt: 'How can I connect with you or view your GitHub?' },
-    { label: '/status', prompt: 'Give me a quick status update on what you are currently building and learning.' }
+    { label: '/contact', prompt: 'How can I connect with you or view your GitHub?' }
   ];
 
   // Dynamic offline fallback knowledge engine in case of network disconnection
   const getFallbackResponse = (query) => {
     const q = query.toLowerCase();
-    if (q.includes('physix') || q.includes('physics') || q.includes('kinematics') || q.includes('projectile')) {
+
+    // 1. Fellow student / Computer Engineering / SIES GST / academics
+    if (
+      q.includes('student') ||
+      q.includes('computer engineering') ||
+      q.includes('college') ||
+      q.includes('sies') ||
+      q.includes('university') ||
+      q.includes('coursework') ||
+      q.includes('studying') ||
+      q.includes('academic') ||
+      q.includes('degree')
+    ) {
+      return (
+        "🎓 **Computer Engineering at SIES GST (Mumbai University)**\n\n" +
+        "• **Degree**: B.Tech in Computer Engineering (Class of 2025–2029) at SIES Graduate School of Technology, Navi Mumbai.\n" +
+        "• **Current Focus**: Mastering Data Structures & Algorithms (Trees, Graphs, DP) in C++, Full-Stack React web apps, Discrete Mathematics, and Computer Architecture.\n" +
+        "• **College Leadership**: Serving as the **Web Development Coordinator** for the ARENA SIESGST student chapter.\n" +
+        "• Great connecting with fellow engineering students! Feel free to ask about PhysiX or my coding journey."
+      );
+    }
+
+    // 2. PhysiX / Physics simulation / Kinematics
+    if (q.includes('physix') || q.includes('physics') || q.includes('kinematics') || q.includes('projectile') || q.includes('simulation')) {
       return (
         "⚛️ **PhysiX — Interactive STEM Physics Laboratory** is my flagship project!\n\n" +
-        "• It's an interactive 2D classical mechanics and kinematics laboratory built with React, HTML5 Canvas, and Vite.\n" +
-        "• Features high-precision projectile motion simulation, planetary gravity presets (Earth, Moon, Mars, Jupiter), real-time telemetry HUD ($t, y, x, v$), vector decomposition, and ghost trails.\n" +
-        "• Explore the code on GitHub: https://github.com/ojasjoshi-007/PhysiX"
+        "• Interactive 2D classical mechanics and kinematics laboratory built with React, HTML5 Canvas, and Vite.\n" +
+        "• **Features**:\n" +
+        "  - High-precision projectile motion: x(t) = v₀·cos(θ)·t and y(t) = h₀ + v₀·sin(θ)·t - ½g·t²\n" +
+        "  - Planetary gravity presets: Earth (9.8 m/s²), Moon (1.62 m/s²), Mars (3.72 m/s²), Jupiter (24.79 m/s²)\n" +
+        "  - Real-time telemetry HUD (t, y, x, v) with live vector decomposition (Cyan total, Green vx, Amber vy)\n" +
+        "  - Ghost trails with parameter tags for visual trajectory comparison\n" +
+        "• GitHub Repo: https://github.com/ojasjoshi-007/PhysiX"
       );
     }
-    if (q.includes('skill') || q.includes('language') || q.includes('c++') || q.includes('stack') || q.includes('react')) {
+
+    // 3. Technical Skills / Stack / Languages / C++ / React
+    if (
+      q.includes('skill') ||
+      q.includes('language') ||
+      q.includes('c++') ||
+      q.includes('stack') ||
+      q.includes('react') ||
+      q.includes('python') ||
+      q.includes('dsa') ||
+      q.includes('algorithm')
+    ) {
       return (
-        "💻 **My Technical Toolkit**:\n\n" +
-        "• **Languages**: C++ (Primary for DSA & competitive problem solving), C (Low-level systems & memory), Python (100 Days of Code & automation), JavaScript (Modern ES6+).\n" +
-        "• **Web & Canvas**: React, HTML5 Canvas (Kinematics simulations), CSS3, Vite.\n" +
+        "💻 **My Technical Stack & Toolkit**:\n\n" +
+        "• **Languages**: C++ (Primary for DSA & problem solving), C (Low-level memory & systems), Python (Automation & 100 Days of Code), JavaScript (Modern ES6+).\n" +
+        "• **Web & Graphics**: React, HTML5 Canvas (Kinematics & visual simulations), CSS3, Vite.\n" +
         "• **Tools & Systems**: Git, GitHub, VS Code, Linux CLI & POSIX.\n" +
-        "• **CS Fundamentals**: Data Structures & Algorithms, Object-Oriented Design, Discrete Math & Kinematics."
+        "• **Core Disciplines**: Data Structures & Algorithms, Object-Oriented Design, Discrete Math & Classical Kinematics."
       );
     }
-    if (q.includes('arena') || q.includes('college') || q.includes('sies') || q.includes('journey') || q.includes('status')) {
+
+    // 4. ARENA / Leadership / Student Chapter
+    if (q.includes('arena') || q.includes('coordinator') || q.includes('leadership') || q.includes('chapter')) {
       return (
-        "🎓 **Academics & Leadership Status**:\n\n" +
-        "• Pursuing B.Tech in Computer Engineering at SIES Graduate School of Technology (University of Mumbai, Class of 2025–2029).\n" +
-        "• Serving as the **Web Development Coordinator** for the ARENA SIESGST student chapter, coordinating events and web platforms.\n" +
-        "• Active focus: LeetCode/DSA in C++, full-stack React architecture, and discrete mathematics."
+        "⚡ **ARENA SIESGST — Web Development Coordinator**\n\n" +
+        "• Serving as the Web Development Coordinator for the ARENA student chapter at SIES Graduate School of Technology.\n" +
+        "• Responsible for engineering chapter web platforms, collaborating with the technical committee, and coordinating student tech events."
       );
     }
-    if (q.includes('sport') || q.includes('hobby') || q.includes('cinema') || q.includes('movie') || q.includes('football')) {
+
+    // 5. Sports / Hobbies / Cinema / Outside code
+    if (q.includes('sport') || q.includes('hobby') || q.includes('cinema') || q.includes('movie') || q.includes('football') || q.includes('badminton')) {
       return (
         "⚽ **Life Beyond The Screen**:\n\n" +
-        "• **Sports**: Enthusiastic about football, badminton, swimming, and pickleball.\n" +
+        "• **Sports**: Active enthusiast of football, badminton, swimming, and pickleball.\n" +
         "• **Cinema**: Passionate cinephile who appreciates thoughtful screenplays and cinematic storytelling.\n" +
         "• **Reading**: Technical literature, non-fiction, and computer science essays."
       );
     }
-    if (q.includes('contact') || q.includes('email') || q.includes('github') || q.includes('linkedin')) {
+
+    // 6. Contact / Links
+    if (q.includes('contact') || q.includes('email') || q.includes('github') || q.includes('linkedin') || q.includes('reach')) {
       return (
         "📬 **Connect with Me**:\n\n" +
         `• Email: ${personalData.email}\n` +
@@ -93,9 +138,11 @@ export default function DigitalTwinTerminal() {
         `• Location: ${personalData.location}`
       );
     }
+
+    // Default friendly assistant response
     return (
       `Hey! I'm Ojas Joshi's AI Digital Twin at SIES GST. I love C++, building software like PhysiX, solving algorithmic problems, and web engineering.\n\n` +
-      `What would you like to know about my projects, stack, or journey?`
+      `What would you like to know about my projects, stack, or journey as a Computer Engineering student?`
     );
   };
 
@@ -124,45 +171,49 @@ export default function DigitalTwinTerminal() {
       import.meta.env.OPENROUTER_API_KEY ||
       '';
 
-    const systemPrompt = `You are the authentic AI Digital Twin of Ojas Joshi, a Computer Science & Engineering undergraduate at SIES Graduate School of Technology (University of Mumbai, Class of 2025-2029).
+    const systemPrompt = `You are the authentic AI Digital Twin of Ojas Joshi, a Computer Engineering undergraduate at SIES Graduate School of Technology (University of Mumbai, Class of 2025–2029).
 
-CRITICAL OUTPUT RULE:
-- Output ONLY your direct final response to the user.
-- NEVER output your internal monologue, thoughts, analysis, planning, or reasoning notes.
-- NEVER start with phrases like "Okay, the user...", "Looking at my persona...", or "*Quick mental scan*".
-- Jump straight into your direct answer as Ojas Joshi.
+CRITICAL INSTRUCTIONS:
+- You represent Ojas Joshi directly. Speak in the first person ("I", "my").
+- Stick strictly to Ojas's actual profile, background, and projects.
+- Never output reasoning tokens, internal thoughts, or metacommentary. Output only your direct message.
 
-Background Knowledge about Ojas:
-- Role: Computer Science Student & Developer at SIES GST (Navi Mumbai / Mumbai University)
-- Leadership: Web Development Coordinator @ ARENA SIESGST chapter
-- Flagship Project: PhysiX (Interactive STEM Physics & 2D Kinematics Laboratory at https://github.com/ojasjoshi-007/PhysiX). Features 2D projectile motion simulation, real-time telemetry HUD, 4 planetary gravity presets (Earth, Moon, Mars, Jupiter), vector decomposition, and ghost trails.
-- Core Languages & Tools: C++ (primary for DSA & algorithms), C (low-level concepts), Python (100 Days of Code), JavaScript (ES6+), React, HTML5 Canvas, Git, GitHub (ojasjoshi-007), Linux.
-- Interests: Problem solving, CS fundamentals, discrete math, systems programming, and physical simulation.
-- Sports & Hobbies: Football, badminton, swimming, pickleball, cinema, and reading.
+OJAS JOSHI PROFILE:
+- Degree: B.Tech in Computer Engineering at SIES Graduate School of Technology, Nerul, Navi Mumbai (Mumbai University, Class of 2025–2029).
+- Role: Web Development Coordinator @ ARENA SIESGST student chapter.
+- Flagship Project: PhysiX — an interactive 2D Classical Mechanics & Kinematics laboratory built with React, HTML5 Canvas, and Vite (https://github.com/ojasjoshi-007/PhysiX). Features projectile motion physics, planetary gravity presets (Earth, Moon, Mars, Jupiter), real-time telemetry HUD, vector decomposition, and ghost trails.
+- Core Stack: C++ (DSA & competitive problem solving), C (systems/memory), Python (automation & 100 Days of Code), JavaScript (ES6+), React, CSS3, HTML5 Canvas, Git/GitHub, Linux.
+- Academics & Focus: Practicing Data Structures & Algorithms (Trees, Graphs, DP) in C++, Full-Stack React web apps, discrete mathematics, and systems architecture.
+- Beyond Tech: Football, badminton, swimming, pickleball, cinema, and reading.
 - Contact: Email ojasj33@gmail.com, GitHub https://github.com/ojasjoshi-007, LinkedIn https://www.linkedin.com/in/ojasj.
 
-Keep responses concise, friendly, authentic, and styled cleanly for a developer terminal.`;
+Keep responses concise, friendly, authentic, and formatted cleanly for a developer terminal.`;
 
     if (!apiKey) {
       setTimeout(() => {
         const fallback = getFallbackResponse(messageText);
         setMessages((prev) => [...prev, { role: 'assistant', content: fallback }]);
         setIsLoading(false);
-      }, 400);
+      }, 300);
       return;
     }
 
-    // Direct chat models prioritized to prevent reasoning monologues
+    // Robust, verified free models with fast latency & solid persona adherence
     const candidateModels = [
-      'liquid/lfm-2.5-2.6b:free',
+      'inclusionai/ling-3.0-flash-fin:free',
       'minimax/minimax-m2.7:free',
-      'openrouter/free'
+      'minimax/minimax-m3:free',
+      'openrouter/free',
+      'nvidia/nemotron-3.5-lightning:free'
     ];
 
     let success = false;
 
     for (const modelName of candidateModels) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 7500);
+
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -177,23 +228,31 @@ Keep responses concise, friendly, authentic, and styled cleanly for a developer 
                 .filter((m) => m.role === 'user' || m.role === 'assistant')
                 .slice(-6)
             ],
-            temperature: 0.7,
-            max_tokens: 300
-          })
+            temperature: 0.6,
+            max_tokens: 650
+          }),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();
-          const rawReply = data.choices?.[0]?.message?.content;
+          const choice = data.choices?.[0];
+          const rawReply =
+            choice?.message?.content ||
+            choice?.text ||
+            (typeof choice?.message === 'string' ? choice.message : '');
+
           const cleanedReply = cleanAIResponse(rawReply);
-          if (cleanedReply) {
+          if (cleanedReply && cleanedReply.length > 0) {
             setMessages((prev) => [...prev, { role: 'assistant', content: cleanedReply }]);
             success = true;
             break;
           }
         }
       } catch (err) {
-        console.warn(`Model ${modelName} attempt failed:`, err);
+        console.warn(`Model ${modelName} attempt failed:`, err.message || err);
       }
     }
 
@@ -222,7 +281,7 @@ Keep responses concise, friendly, authentic, and styled cleanly for a developer 
           </div>
           <h2 className="section-title">Terminal Intelligence [ojas-twin]</h2>
           <p className="section-description">
-            Chat with my interactive AI digital twin powered by OpenRouter. Ask any question about my journey, PhysiX, C++, algorithms, or hobbies!
+            Chat with my interactive AI digital twin. Ask any question about my journey as a Computer Engineering student, PhysiX, C++, algorithms, or hobbies!
           </p>
         </div>
 
@@ -243,13 +302,20 @@ Keep responses concise, friendly, authentic, and styled cleanly for a developer 
 
             <div className="terminal-chat-actions">
               <button
-                onClick={() => setMessages([{ role: 'assistant', content: '⚡ Terminal cleared. Ready for input.' }])}
+                onClick={() =>
+                  setMessages([
+                    {
+                      role: 'assistant',
+                      content: '⚡ Terminal reset. Digital Twin is ready for new prompts.'
+                    }
+                  ])
+                }
                 className="terminal-clear-btn"
-                title="Clear Terminal Screen"
+                title="Reset Terminal Screen"
                 aria-label="Clear chat"
               >
                 <Trash2 size={14} />
-                <span>Clear</span>
+                <span>Reset</span>
               </button>
             </div>
           </div>
@@ -302,7 +368,7 @@ Keep responses concise, friendly, authentic, and styled cleanly for a developer 
             <span className="t-prompt">$</span>
             <input
               type="text"
-              placeholder="Ask anything about PhysiX, C++, coursework, or type a command..."
+              placeholder="Ask anything about PhysiX, C++, CE coursework, or click a command..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}

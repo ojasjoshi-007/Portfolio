@@ -7,7 +7,7 @@
 
 export const personalData = {
   name: "Ojas Joshi",
-  headline: "Computer Science Student & Developer",
+  headline: "Computer Engineering Student & Developer",
   systemStatus: "ONLINE • RUNNING v1.0",
   coreVersion: "2026.8",
   status: "Open to learning & collaborations",
